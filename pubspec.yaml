@@ -1,0 +1,45 @@
+name: todo_app
+description: "A simple todo app"
+publish_to: "none"
+version: 1.0.0
+
+environment:
+    sdk: ">=3.2.3 <4.0.0"
+
+dependencies:
+    flutter:
+        sdk: flutter
+    google_fonts: ^6.1.0
+    firebase_core: ^2.24.0
+    firebase_auth: ^4.15.0
+    cloud_firestore: ^4.13.3
+    json_annotation: ^4.8.1
+    flutter_screenutil: ^5.9.0
+    flutter_local_notifications: ^16.2.0
+    flutter_slidable: ^3.0.1
+    easy_date_timeline: ^1.0.2
+    gap: ^3.0.1
+    animated_list_plus: ^0.5.2
+    intl: ^0.18.1
+    entry: ^0.0.9
+    flutter_riverpod: ^2.4.9
+    riverpod_annotation: ^2.3.3
+    confetti: ^0.7.0
+
+dev_dependencies:
+    flutter_lints: ^3.0.1
+    flutter_launcher_icons: ^0.13.1
+    build_runner: ^2.4.7
+    json_serializable: ^6.7.1
+    riverpod_generator: ^2.3.9
+    riverpod_lint: ^2.3.7
+    custom_lint: ^0.5.7
+
+flutter:
+    uses-material-design: true
+    assets:
+        - assets/
+
+flutter_launcher_icons:
+    ios: true
+    image_path: "assets/todo_app_icon.png"
