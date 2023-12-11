@@ -1,5 +1,10 @@
 # A simple yet beautiful to-do app
 
+<img src="./screenshots/light.png" width="600" alt="light theme">
+<img src="./screenshots/dark.png" width="600" alt="dark theme">
+
+## Reproduction
+
 1. Clone the repo, install the dependencies: `flutter pub get`
 
 2. Register the app with your Firebase project: `flutterfire configure`
