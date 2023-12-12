@@ -32,7 +32,7 @@ class OnboardingScreen extends StatelessWidget {
               },
               child: Text(
                 'Let\'s begin!',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.geologica(
                     fontWeight: FontWeight.w300, fontSize: 18.sp),
               ),
             ),

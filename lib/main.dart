@@ -52,8 +52,8 @@ class _MyAppState extends ConsumerState<MyApp> {
     for (final brightness in {Brightness.light, Brightness.dark}) {
       themes.add(ThemeData(
           brightness: brightness,
-          colorSchemeSeed: Colors.orange,
-          textTheme: GoogleFonts.poppinsTextTheme(const TextTheme(
+          colorSchemeSeed: const Color(0xFFFD581C),
+          textTheme: GoogleFonts.geologicaTextTheme(const TextTheme(
               headlineLarge: TextStyle(
             fontWeight: FontWeight.w600,
           )))));

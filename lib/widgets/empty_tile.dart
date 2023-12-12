@@ -17,7 +17,7 @@ class EmptyTile extends StatelessWidget {
         const Gap(30),
         Text(
           'Nothing here yet',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.geologica(
               fontWeight: FontWeight.w300,
               fontSize: 18.sp,
               color: Theme.of(context).colorScheme.onSurfaceVariant),

@@ -24,7 +24,7 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
   final _welcomeSnackBar = const SnackBar(
       content: Text("Thanks for signing up!"),
-      duration: Duration(milliseconds: 1000));
+      duration: Duration(milliseconds: 2000));
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +173,7 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
               padding: EdgeInsets.only(right: 8.w),
               child: Text(
                 _isSignIn ? 'Sign in' : 'Sign up',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.geologica(
                     fontWeight: FontWeight.w300, fontSize: 18.sp),
               )),
           label: _isLoading
@@ -199,8 +199,7 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
     if (!_isSignIn) {
       ScaffoldMessenger.of(context).showSnackBar(_welcomeSnackBar);
     }
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (_) => false);
   }
 
   Future<bool> _saveForm() async {
