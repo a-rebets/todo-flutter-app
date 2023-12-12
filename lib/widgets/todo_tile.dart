@@ -18,6 +18,20 @@ class TodoTile extends ConsumerWidget {
       key: ValueKey(todo.id),
       child: Slidable(
         key: ValueKey(todo.id),
+        startActionPane: ActionPane(
+            extentRatio: 0.35,
+            motion: const ScrollMotion(),
+            children: [
+              SlidableAction(
+                onPressed: (context) {
+                  _moveToNextDay(ref);
+                },
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                foregroundColor: Theme.of(context).colorScheme.primary,
+                icon: Icons.keyboard_double_arrow_right,
+                label: 'Do tomorrow',
+              )
+            ]),
         endActionPane: ActionPane(
           extentRatio: 0.35,
           motion: const ScrollMotion(),
@@ -56,6 +70,7 @@ class TodoTile extends ConsumerWidget {
                   },
                 );
               },
+              onTap: () => _updateDoneStatus(ref),
               title: Text(
                 todo.title,
                 style: TextStyle(
@@ -66,12 +81,7 @@ class TodoTile extends ConsumerWidget {
                 value: todo.isDone,
                 materialTapTargetSize: MaterialTapTargetSize.padded,
                 visualDensity: VisualDensity.comfortable,
-                onChanged: (value) {
-                  todo.isDone = value!;
-                  ref
-                      .read(todoListProvider.notifier)
-                      .updateTaskItemToServer(todo);
-                },
+                onChanged: (_) => _updateDoneStatus(ref),
               ),
               trailing: todo.isReminder
                   ? const Icon(Icons.notifications_active)
@@ -79,5 +89,15 @@ class TodoTile extends ConsumerWidget {
             )),
       ),
     );
+  }
+
+  Future<void> _moveToNextDay(WidgetRef ref) async {
+    todo.todoDate = todo.todoDate.add(const Duration(days: 1));
+    await ref.read(todoListProvider.notifier).updateTaskItemToServer(todo);
+  }
+
+  Future<void> _updateDoneStatus(WidgetRef ref) async {
+    todo.isDone = !todo.isDone;
+    await ref.read(todoListProvider.notifier).updateTaskItemToServer(todo);
   }
 }
