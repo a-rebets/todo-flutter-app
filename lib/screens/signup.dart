@@ -199,7 +199,7 @@ class _SignUpFormState extends ConsumerState<SignUpForm> {
     if (!_isSignIn) {
       ScaffoldMessenger.of(context).showSnackBar(_welcomeSnackBar);
     }
-    Navigator.of(context).pushNamedAndRemoveUntil('/', (_) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/home', (_) => false);
   }
 
   Future<bool> _saveForm() async {

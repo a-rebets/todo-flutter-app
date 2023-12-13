@@ -85,6 +85,7 @@ class _MyAppState extends ConsumerState<MyApp> {
               routes: {
                 '/auth': (ctx) => const SignUpForm(),
                 '/splash': (ctx) => const SplashScreen(),
+                '/home': (ctx) => const StartApp(afterAppLaunch: true),
               });
         });
   }

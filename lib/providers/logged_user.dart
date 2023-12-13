@@ -10,14 +10,16 @@ part 'logged_user.g.dart';
 class LoggedUser extends _$LoggedUser {
   @override
   Future<AppUser?> build() async {
-    final auth = ref.watch(authProvider).currentUser;
-    if (auth != null) {
+    final user = ref.watch(authProvider).currentUser;
+    if (user != null) {
       final firestore = ref.watch(firestoreProvider);
-      final user = await firestore.collection('users').doc(auth.uid).get();
+      final userData = await firestore.collection('users').doc(user.uid).get();
+      // minimal delay to show splash screen
+      await Future.delayed(const Duration(milliseconds: 500));
       return AppUser(
-          id: auth.uid,
-          name: user.data()!['name'],
-          email: user.data()!['email']);
+          id: user.uid,
+          name: userData.data()!['name'],
+          email: userData.data()!['email']);
     } else {
       return null;
     }
@@ -42,6 +44,7 @@ class LoggedUser extends _$LoggedUser {
       );
     }
     ref.invalidateSelf();
+    await future;
   }
 
   Future<void> signOutUser() async {
