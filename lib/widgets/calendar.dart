@@ -61,7 +61,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: Align(
               alignment: Alignment.centerLeft,
-              child: Text(DateFormat('d/M/y').format(_selectedDay),
+              child: Text(DateFormat('d / M / y').format(_selectedDay),
                   style: Theme.of(context).textTheme.titleMedium))),
       EasyInfiniteDateTimeLine(
         showTimelineHeader: false,
