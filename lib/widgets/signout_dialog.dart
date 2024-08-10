@@ -32,9 +32,11 @@ class SignOutDialog extends ConsumerWidget {
   }
 
   Future<void> _signOut(Future<void> Function() signOutMethod) async {
-    Navigator.of(parentContext)
-        .pushNamedAndRemoveUntil('/splash', ModalRoute.withName('/home'));
+    Navigator.of(parentContext).pushNamed('/splash');
+
     await Future.delayed(const Duration(milliseconds: 1000));
-    await signOutMethod().then((_) => Navigator.pop(parentContext));
+    
+    await signOutMethod().then((_) => 
+      Navigator.of(parentContext).pushNamedAndRemoveUntil('/auth', (_) => false));
   }
 }
