@@ -15,7 +15,7 @@
 
 1. Clone the repo, install the dependencies: `flutter pub get`
 
-2. Register the app with your Firebase project: `flutterfire configure`
+2. Register the app with your Firebase project: `flutterfire configure` (Note: Enabling Email & Password accounts in the Auth section of the Firebase console is required)
 
 3. Generate the icons: `dart run flutter_launcher_icons`
 
@@ -25,7 +25,7 @@
 
 6. Connect a device with iOS 17 or later, with Developer Mode enabled
 
-7. Install the built app container (`./build/ios/iphoneos/Runner.app`), via XCode: Windows > Devices and Simulators > Installed apps
+7. Install the built app container (`./build/ios/iphoneos/Runner.app`), via XCode: Window > Devices and Simulators > Installed apps
 
 8. Mark the app "trusted" in the iPhone's `General > VPN & Device Management` settings section
 
