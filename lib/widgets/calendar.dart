@@ -41,6 +41,11 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     super.initState();
     _selectedDay = widget.initialDaySelected;
     _controller = EasyInfiniteDateTimelineController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 50), () {
+        _controller?.animateToCurrentData();
+      });
+      });
   }
 
   @override
@@ -68,12 +73,12 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         controller: _controller,
         firstDate: _firstDate,
         lastDate: _lastDate,
+        selectionMode: const SelectionMode.alwaysFirst(),
         focusDate: _selectedDay,
         onDateChange: (selectedDay) {
           _changeDay(selectedDay);
         },
         timeLineProps: EasyTimeLineProps(
-          hPadding: 30,
           margin: EdgeInsets.only(bottom: 8.h, top: 12.h),
         ),
         activeColor: Theme.of(context).colorScheme.primary,
