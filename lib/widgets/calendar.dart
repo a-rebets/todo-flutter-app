@@ -79,7 +79,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           _changeDay(selectedDay);
         },
         timeLineProps: EasyTimeLineProps(
-          hPadding: 30,
+          hPadding: 8.5,
           margin: EdgeInsets.only(bottom: 8.h, top: 12.h),
         ),
         activeColor: Theme.of(context).colorScheme.primary,
