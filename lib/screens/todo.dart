@@ -51,23 +51,6 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
       appBar: AppBar(
         titleSpacing: 12.w,
         title: Text("${widget.user.name}'s todos"),
-        actions: [
-          IconButton(
-              icon: Icon((isLightTheme) ? Icons.dark_mode : Icons.light_mode),
-              tooltip: 'Dark theme',
-              onPressed: () {
-                ref.read(themeSwitchProvider.notifier).update(
-                    (isLightTheme) ? Brightness.dark : Brightness.light);
-              }),
-          IconButton(
-              icon: const Icon(Icons.logout),
-              tooltip: 'Log out',
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (ctx) => SignOutDialog(parentContext: context));
-              }),
-        ],
       ),
       body: SafeArea(
           child: Column(

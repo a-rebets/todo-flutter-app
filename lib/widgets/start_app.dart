@@ -5,7 +5,7 @@ import 'package:todo_app/providers/firebase.dart';
 import 'package:todo_app/providers/logged_user.dart';
 import 'package:todo_app/screens/onboarding.dart';
 import 'package:todo_app/screens/splash.dart';
-import 'package:todo_app/screens/todo.dart';
+import 'package:todo_app/screens/home.dart';
 
 class StartApp extends ConsumerWidget {
   final Widget _loadingScreen =
@@ -33,7 +33,7 @@ class StartApp extends ConsumerWidget {
         return const OnboardingScreen();
       }
     } else {
-      return TodoScreen(user: user);
+      return HomeScreen(user: user);
     }
   }
 }
