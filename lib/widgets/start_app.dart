@@ -13,7 +13,7 @@ class StartApp extends ConsumerWidget {
       const Scaffold(body: Center(child: CircularProgressIndicator.adaptive()));
   final bool afterAppLaunch;
 
-  const StartApp({super.key, this.afterAppLaunch = false});
+  StartApp({super.key, this.afterAppLaunch = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

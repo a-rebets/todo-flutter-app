@@ -15,12 +15,31 @@ class ProfileScreen extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 50,
-            backgroundImage: NetworkImage(user.profilePictureUrl ?? ''),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [Colors.blue, Colors.purple],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  user.name[0],
+                  style: TextStyle(
+                    fontSize: 40,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
           ),
           const SizedBox(height: 16),
           Text(
             user.name,
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 16),
           Card(
@@ -34,12 +53,12 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Completed Todos',
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    user.completedTodosCount.toString(),
-                    style: Theme.of(context).textTheme.headline4,
+                    '0',
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ],
               ),
