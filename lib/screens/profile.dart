@@ -69,8 +69,7 @@ class ProfileScreen extends StatelessWidget {
                           completedCount.toString(),
                           style: Theme.of(context).textTheme.headlineMedium,
                         );
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
+                    },)
                 ],
               ),
             ),
