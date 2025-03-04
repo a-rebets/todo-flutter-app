@@ -40,6 +40,10 @@ jobs:
           IOS_BUNDLE_ID: ${{ secrets.IOS_BUNDLE_ID || 'com.example.todoApp' }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
+          # Install Firebase CLI
+          curl -sL https://firebase.tools | bash
+          
+          # Activate and configure flutterfire
           dart pub global activate flutterfire_cli
           export PATH="$PATH":"$HOME/.pub-cache/bin"
           flutterfire configure \
