@@ -67,19 +67,6 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Upload APK as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 7
-
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: app-release
-          path: downloaded-apk
-
       - name: Install Node.js and npm
         run: |
           apt-get update
@@ -88,7 +75,10 @@ jobs:
           npm --version
 
       - name: Install Node dependencies
-        run: npm install -g uploadthing @octokit/rest
+        run: |
+          cd scripts
+          npm init -y
+          npm install uploadthing @octokit/rest
 
       - name: Upload final APK and comment on PR
         env:
@@ -97,4 +87,4 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           COMMIT_SHA: ${{ github.sha }}
           RUN_ID: ${{ github.run_id }}
-        run: node scripts/apk-comment.js 
+        run: cd scripts && node apk-comment.js 

@@ -9,7 +9,7 @@ const utapi = new UTApi({
 });
 
 async function uploadApk() {
-    const apkPath = path.join(process.cwd(), 'downloaded-apk/app-release.apk');
+    const apkPath = path.join(process.cwd(), 'build/app/outputs/flutter-apk/app-release.apk');
     const fileBuffer = fs.readFileSync(apkPath);
     const fileName = `app-release-PR${process.env.PR_NUMBER}-${process.env.RUN_ID}.apk`;
     const file = new File([fileBuffer], fileName, { 
