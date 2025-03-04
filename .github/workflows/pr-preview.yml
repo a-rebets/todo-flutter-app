@@ -1,5 +1,11 @@
 name: PR Preview Build
 
+# Add permissions block at the top level
+permissions:
+  pull-requests: write  # Allow creating comments on PRs
+  issues: write       # Allow creating comments on issues
+  contents: read       # Allow reading repository contents
+
 on:
   pull_request:
     types: [opened, synchronize]
@@ -17,7 +23,6 @@ jobs:
         run: |
           apt-get update
           apt-get install -y openjdk-17-jdk
-          echo $JAVA_HOME
           java -version
 
       - name: Configure Git safe directory
@@ -69,7 +74,12 @@ jobs:
           name: app-release
           path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 7
-          compression-level: 6
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release
+          path: downloaded-apk
 
       - name: Comment on PR with APK
         uses: actions/github-script@v6
@@ -78,16 +88,21 @@ jobs:
           script: |
             const fs = require('fs');
             
-            const artifactUrl = `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`;
+            // Read the APK file
+            const apkPath = 'downloaded-apk/app-release.apk';
+            const apkContent = fs.readFileSync(apkPath);
+            const apkBase64 = apkContent.toString('base64');
             
             const comment = `## 📱 Preview APK Available
             
-            A preview APK has been built for this PR. You can download it from the [Actions tab](${artifactUrl}).
+            A preview APK has been built for this PR.
             
             ### Build Information
             - PR: #${{ github.event.pull_request.number }}
             - Commit: ${{ github.sha }}
             - Build: ${{ github.run_id }}
+            
+            [Download APK](data:application/vnd.android.package-archive;base64,${apkBase64})
             `;
             
             github.rest.issues.createComment({
