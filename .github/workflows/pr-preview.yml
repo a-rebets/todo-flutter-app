@@ -67,19 +67,18 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Install Node.js and npm
+      - name: Install Bun
         run: |
           apt-get update
-          apt-get install -y nodejs npm
-          node --version
-          npm --version
+          apt-get install -y curl unzip
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH
 
-      - name: Install Node dependencies
+      - name: Install npm packages
         run: |
           cd scripts
-          npm init -y
-          npm pkg set type="module"
-          npm install uploadthing @octokit/rest
+          bun init -y
+          bun add uploadthing @octokit/rest
 
       - name: Upload final APK and comment on PR
         env:
@@ -88,4 +87,4 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           COMMIT_SHA: ${{ github.sha }}
           RUN_ID: ${{ github.run_id }}
-        run: cd scripts && node apk-comment.js 
+        run: cd scripts && bun run apk-comment.js 
