@@ -10,30 +10,30 @@ dependencies:
     flutter:
         sdk: flutter
     google_fonts: ^6.1.0
-    firebase_core: ^2.24.2
-    firebase_auth: ^4.15.0
-    cloud_firestore: ^4.13.3
-    json_annotation: ^4.8.1
+    firebase_core: ^3.12.1
+    firebase_auth: ^5.5.1
+    cloud_firestore: ^5.6.5
+    json_annotation: ^4.9.0
     flutter_screenutil: ^5.9.0
-    flutter_local_notifications: ^17.2.1+2
-    flutter_slidable: ^3.0.1
-    easy_date_timeline: ^1.0.2
+    flutter_local_notifications: ^18.0.1
+    flutter_slidable: ^4.0.0
+    easy_date_timeline: ^2.0.9
     gap: ^3.0.1
     animated_list_plus: ^0.5.2
     intl: ^0.19.0
     entry: ^1.0.0
-    flutter_riverpod: ^2.4.9
-    riverpod_annotation: ^2.3.3
-    confetti: ^0.7.0
+    flutter_riverpod: 2.6.1
+    riverpod_annotation: 2.6.1
+    confetti: 0.8.0
 
 dev_dependencies:
-    flutter_lints: ^4.0.0
-    flutter_launcher_icons: ^0.13.1
-    build_runner: ^2.4.7
+    flutter_lints: ^5.0.0
+    flutter_launcher_icons: ^0.14.3
+    build_runner: 2.4.15
     json_serializable: ^6.7.1
-    riverpod_generator: ^2.3.9
-    riverpod_lint: ^2.3.7
-    custom_lint: ^0.6.4
+    riverpod_generator: 2.6.5
+    riverpod_lint: 2.6.5
+    custom_lint: 0.7.5
 
 flutter:
     uses-material-design: true
@@ -42,5 +42,6 @@ flutter:
 
 flutter_launcher_icons:
     ios: true
+    android: true
     remove_alpha_ios: true
     image_path: "assets/todo_app_icon.png"

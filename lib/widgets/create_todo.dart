@@ -1,13 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:todo_app/main.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/notifications.dart';
 import 'package:todo_app/providers/todo_list.dart';
 
 class CreateTodo extends ConsumerStatefulWidget {
@@ -117,11 +116,17 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
   void _handleSave() {
     if (_formKey.currentState!.validate()) {
       final crudTodo = ref.read(todoListProvider.notifier);
+      final notificationService = ref.read(notificationServiceProvider);
+
       if (widget.isEdit) {
         final todo = widget.todo!
           ..title = title
           ..isReminder = remindMe;
         crudTodo.updateTaskItemToServer(todo);
+
+        if (remindMe) {
+          notificationService.showTaskNotification(todo);
+        }
       } else {
         final todo = Todo(
             todoDate: widget.selectedDay!.toUtc(),
@@ -130,20 +135,12 @@ class _CreateTodoState extends ConsumerState<CreateTodo> {
             isReminder: remindMe,
             isDone: false);
         crudTodo.putTaskItemsToServer(todo);
-        _showNotification(todo);
+
+        if (remindMe) {
+          notificationService.showTaskNotification(todo);
+        }
       }
       Navigator.pop(context);
     }
-  }
-
-  Future<void> _showNotification(Todo todo) async {
-    const DarwinNotificationDetails iOSPlatformChannelSpecifics =
-        DarwinNotificationDetails(
-            badgeNumber: null, threadIdentifier: 'todo-thread');
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(iOS: iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-        0, title, 'Your task was created', platformChannelSpecifics,
-        payload: '${todo.createdAt}');
   }
 }

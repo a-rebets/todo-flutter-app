@@ -17,7 +17,7 @@ class CalendarWidget extends StatefulWidget {
 class _CalendarWidgetState extends State<CalendarWidget> {
   late DateTime _selectedDay;
   final _firstDate = DateTime(2023);
-  final _lastDate = DateTime(2024, 12, 31);
+  final _lastDate = DateTime(2025, 12, 31);
   late EasyInfiniteDateTimelineController? _controller;
 
   DayStyle _getDayStyle([
@@ -45,7 +45,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       Future.delayed(const Duration(milliseconds: 50), () {
         _controller?.animateToCurrentData();
       });
-      });
+    });
   }
 
   @override

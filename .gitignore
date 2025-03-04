@@ -42,3 +42,5 @@ GoogleService-Info.plist
 
 # Ignore the project.pbxproj file in the iOS project
 ios/Runner.xcodeproj/project.pbxproj
+
+.cxx

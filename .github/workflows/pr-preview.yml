@@ -1,0 +1,90 @@
+name: PR Preview Build
+
+permissions:
+  pull-requests: write  # Allow creating comments on PRs
+  issues: write       # Allow creating comments on issues
+  contents: read       # Allow reading repository contents
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: instrumentisto/flutter:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install OpenJDK 17
+        run: |
+          apt-get update
+          apt-get install -y openjdk-17-jdk
+          java -version
+
+      - name: Configure Git safe directory
+        run: git config --global --add safe.directory /usr/local/flutter
+
+      - name: Create local.properties
+        run: |
+          echo "flutter.sdk=/usr/local/flutter" > android/local.properties
+          echo "flutter.versionName=1.0.0" >> android/local.properties
+
+      - name: Clean Flutter
+        run: flutter clean
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Configure Firebase
+        env:
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          ANDROID_PACKAGE_NAME: ${{ secrets.ANDROID_PACKAGE_NAME || 'com.example.todo_app' }}
+          IOS_BUNDLE_ID: ${{ secrets.IOS_BUNDLE_ID || 'com.example.todoApp' }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          # Install Firebase CLI
+          curl -sL https://firebase.tools | bash
+          
+          # Activate and configure flutterfire
+          dart pub global activate flutterfire_cli
+          export PATH="$PATH":"$HOME/.pub-cache/bin"
+          flutterfire configure \
+            --project=$FIREBASE_PROJECT_ID \
+            --out=lib/firebase_options.dart \
+            --ios-bundle-id=$IOS_BUNDLE_ID \
+            --ios-out=ios/Runner/GoogleService-Info.plist \
+            --android-package-name=$ANDROID_PACKAGE_NAME \
+            --android-out=android/app/google-services.json \
+            --platforms=android,ios \
+            --yes
+
+      - name: Generate code with build_runner
+        run: dart run build_runner build -d
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Install Bun
+        run: |
+          apt-get update
+          apt-get install -y curl unzip
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+      - name: Install npm packages
+        run: |
+          cd scripts
+          bun init -y
+          bun add uploadthing @octokit/rest
+
+      - name: Upload final APK and comment on PR
+        env:
+          UPLOADTHING_TOKEN: ${{ secrets.UPLOADTHING_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          COMMIT_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_number }}
+        run: cd scripts && bun run apk-comment.js 
