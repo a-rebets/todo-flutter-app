@@ -78,6 +78,7 @@ jobs:
         run: |
           cd scripts
           npm init -y
+          npm pkg set type="module"
           npm install uploadthing @octokit/rest
 
       - name: Upload final APK and comment on PR
