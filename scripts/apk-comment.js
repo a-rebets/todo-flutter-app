@@ -11,7 +11,7 @@ const __dirname = dirname(__filename);
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 const utapi = new UTApi({
     token: process.env.UPLOADTHING_TOKEN,
-    logLevel: "Error"
+    logLevel: "Debug"
 });
 
 async function uploadApk() {
