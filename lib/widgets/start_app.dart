@@ -6,6 +6,7 @@ import 'package:todo_app/providers/logged_user.dart';
 import 'package:todo_app/screens/onboarding.dart';
 import 'package:todo_app/screens/splash.dart';
 import 'package:todo_app/screens/todo.dart';
+import 'package:todo_app/screens/profile.dart';
 
 class StartApp extends ConsumerWidget {
   final Widget _loadingScreen =
@@ -25,6 +26,12 @@ class StartApp extends ConsumerWidget {
     );
   }
 
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    _selectedIndex = index;
+  }
+
   Widget _getScreen(AppUser? user, WidgetRef ref) {
     if (user == null) {
       if (ref.read(authProvider).currentUser != null) {
@@ -33,7 +40,17 @@ class StartApp extends ConsumerWidget {
         return const OnboardingScreen();
       }
     } else {
-      return TodoScreen(user: user);
+      return Scaffold(
+          body: _selectedIndex == 0 ? TodoScreen(user: user) : ProfileScreen(user: user),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Todos'),
+              BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+            ],
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+          ),
+        );
     }
   }
 }
