@@ -65,7 +65,10 @@ class ProfileScreen extends StatelessWidget {
                           .expand((list) => list)
                           .where((todo) => todo.isDone)
                           .length;
-                      return Text(completedCount.toString(),
+                      return Text(
+                          completedCount.toString(),
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        );
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ],
