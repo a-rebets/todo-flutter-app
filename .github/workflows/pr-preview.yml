@@ -17,6 +17,7 @@ jobs:
         run: |
           apt-get update
           apt-get install -y openjdk-17-jdk
+          echo $JAVA_HOME
           java -version
 
       - name: Configure Git safe directory
