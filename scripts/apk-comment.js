@@ -36,17 +36,16 @@ async function main() {
         const apkUrl = await uploadApk();
         
         const comment = `## 📱 Preview APK Available
+
+A preview APK has been built for this PR.
         
-        A preview APK has been built for this PR.
+### Build Information
+- PR: #${process.env.PR_NUMBER}
+- Commit: ${process.env.COMMIT_SHA}
+- Build: ${process.env.RUN_ID}
         
-        ### Build Information
-        - PR: #${process.env.PR_NUMBER}
-        - Commit: ${process.env.COMMIT_SHA}
-        - Build: ${process.env.RUN_ID}
-        
-        ### Download
-        [⬇️ Download APK](${apkUrl})
-        `;
+### Download
+[⬇️ Download APK](${apkUrl})`;
         
         await octokit.issues.createComment({
             owner: process.env.GITHUB_REPOSITORY.split('/')[0],
