@@ -1,16 +1,17 @@
 import { UTApi } from 'uploadthing/server';
-import fs from 'fs';
-import path from 'path';
+import { readFileSync } from "fs";
+import { join } from "path";
 import { Octokit } from '@octokit/rest';
+import { File } from 'buffer';
 
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 const utapi = new UTApi({
-    token: process.env.UPLOADTHING_TOKEN
+    token: process.env.UPLOADTHING_TOKEN,
+    logLevel: "Error"
 });
 
 async function uploadApk() {
-    const apkPath = path.join(process.cwd(), '..', 'build/app/outputs/flutter-apk/app-release.apk');
-    const fileBuffer = fs.readFileSync(apkPath);
+    const fileBuffer = readFileSync(join(__dirname, "..", "build/app/outputs/flutter-apk/app-release.apk"));
     const fileName = `app-release-PR${process.env.PR_NUMBER}-${process.env.RUN_ID}.apk`;
     const file = new File([fileBuffer], fileName, { 
         type: "application/vnd.android.package-archive" 
