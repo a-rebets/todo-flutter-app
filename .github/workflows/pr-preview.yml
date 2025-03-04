@@ -1,6 +1,5 @@
 name: PR Preview Build
 
-# Add permissions block at the top level
 permissions:
   pull-requests: write  # Allow creating comments on PRs
   issues: write       # Allow creating comments on issues
@@ -81,33 +80,63 @@ jobs:
           name: app-release
           path: downloaded-apk
 
-      - name: Comment on PR with APK
+      - name: Install uploadthing
+        run: npm install uploadthing
+
+      - name: Upload final APK and comment on PR
         uses: actions/github-script@v6
+        env:
+          UPLOADTHING_TOKEN: ${{ secrets.UPLOADTHING_TOKEN }}
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const { UTApi } = require('uploadthing/server');
             const fs = require('fs');
+            const path = require('path');
             
-            // Read the APK file
-            const apkPath = 'downloaded-apk/app-release.apk';
-            const apkContent = fs.readFileSync(apkPath);
-            const apkBase64 = apkContent.toString('base64');
+            const utapi = new UTApi({
+              token: process.env.UPLOADTHING_TOKEN
+            });
             
-            const comment = `## 📱 Preview APK Available
+            async function uploadApk() {
+              const apkPath = path.join(process.cwd(), 'downloaded-apk/app-release.apk');
+              const fileBuffer = fs.readFileSync(apkPath);
+              const fileName = `app-release-PR${context.issue.number}-${process.env.GITHUB_RUN_NUMBER}.apk`;
+              const file = new File([fileBuffer], fileName, { 
+                type: "application/vnd.android.package-archive" 
+              });
+              
+              const results = await utapi.uploadFiles([file]);
+              const uploadedFile = results[0].data;
+              
+              if (!uploadedFile) {
+                throw new Error('Upload failed: No data returned from UploadThing');
+              }
+              
+              return uploadedFile.ufsUrl;
+            }
             
-            A preview APK has been built for this PR.
-            
-            ### Build Information
-            - PR: #${{ github.event.pull_request.number }}
-            - Commit: ${{ github.sha }}
-            - Build: ${{ github.run_id }}
-            
-            [Download APK](data:application/vnd.android.package-archive;base64,${apkBase64})
-            `;
-            
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            }); 
+            try {
+              const apkUrl = await uploadApk();
+              
+              const comment = `## 📱 Preview APK Available
+              
+              A preview APK has been built for this PR.
+              
+              ### Build Information
+              - PR: #${{ github.event.pull_request.number }}
+              - Commit: ${{ github.sha }}
+              - Build: ${{ github.run_id }}
+              
+              ### Download
+              [⬇️ Download APK](${apkUrl})
+              `;
+              
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } catch (error) {
+              core.setFailed(`Failed to upload APK: ${error.message}`);
+            } 
