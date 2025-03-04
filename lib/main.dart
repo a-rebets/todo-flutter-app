@@ -1,30 +1,24 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todo_app/firebase_options.dart';
+import 'package:todo_app/notifications.dart';
 import 'package:todo_app/providers/theme_switch.dart';
 import 'package:todo_app/screens/signup.dart';
 import 'package:todo_app/screens/splash.dart';
 
 import 'widgets/start_app.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  const DarwinInitializationSettings initializationSettingsDarwin =
-      DarwinInitializationSettings(requestAlertPermission: true);
-  InitializationSettings initializationSettings = const InitializationSettings(
-    android: null,
-    iOS: initializationSettingsDarwin,
-  );
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   await ScreenUtil.ensureScreenSize();
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -39,12 +33,24 @@ class _MyAppState extends ConsumerState<MyApp> {
   late List<ThemeData> _themes;
 
   @override
-  initState() {
+  void initState() {
     super.initState();
-    _initialization = Firebase.initializeApp(
+    _initialization = _initializeApp();
+    _generateThemes();
+  }
+
+  Future<FirebaseApp> _initializeApp() async {
+    // Initialize Firebase
+    final app = await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    _generateThemes();
+
+    // Initialize notifications
+    final notificationService = ref.read(notificationServiceProvider);
+    await notificationService.initialize();
+    await notificationService.requestPermissions();
+
+    return app;
   }
 
   void _generateThemes() {

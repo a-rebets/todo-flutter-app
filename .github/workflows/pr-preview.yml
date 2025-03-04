@@ -1,0 +1,92 @@
+name: PR Preview Build
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: instrumentisto/flutter:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install OpenJDK 17
+        run: |
+          apt-get update
+          apt-get install -y openjdk-17-jdk
+          java -version
+
+      - name: Create local.properties
+        run: |
+          echo "flutter.sdk=/usr/local/flutter" > android/local.properties
+          echo "flutter.versionName=1.0.0" >> android/local.properties
+
+      - name: Clean Flutter
+        run: flutter clean
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Clean Gradle cache if needed
+        run: |
+          rm -rf ~/.gradle/caches/ || true
+          flutter clean
+
+      - name: Configure Firebase
+        env:
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          ANDROID_PACKAGE_NAME: ${{ secrets.ANDROID_PACKAGE_NAME || 'com.example.todo_app' }}
+          IOS_BUNDLE_ID: ${{ secrets.IOS_BUNDLE_ID || 'com.example.todoApp' }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          dart pub global activate flutterfire_cli
+          flutterfire configure \
+            --project=$FIREBASE_PROJECT_ID \
+            --out=lib/firebase_options.dart \
+            --ios-bundle-id=$IOS_BUNDLE_ID \
+            --ios-out=ios/Runner/GoogleService-Info.plist \
+            --android-package-name=$ANDROID_PACKAGE_NAME \
+            --android-out=android/app/google-services.json \
+            --yes
+
+      - name: Generate code with build_runner
+        run: dart run build_runner build -d
+
+      - name: Build APK
+        run: flutter build apk --debug
+
+      - name: Upload APK as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-debug
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 7
+
+      - name: Comment on PR with APK
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            
+            const artifactUrl = `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`;
+            
+            const comment = `## 📱 Preview APK Available
+            
+            A preview APK has been built for this PR. You can download it from the [Actions tab](${artifactUrl}).
+            
+            ### Build Information
+            - PR: #${{ github.event.pull_request.number }}
+            - Commit: ${{ github.sha }}
+            - Build: ${{ github.run_id }}
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            }); 
