@@ -19,6 +19,9 @@ jobs:
           apt-get install -y openjdk-17-jdk
           java -version
 
+      - name: Configure Git safe directory
+        run: git config --global --add safe.directory /usr/local/flutter
+
       - name: Create local.properties
         run: |
           echo "flutter.sdk=/usr/local/flutter" > android/local.properties
