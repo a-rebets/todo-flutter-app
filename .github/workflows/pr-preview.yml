@@ -53,6 +53,7 @@ jobs:
             --ios-out=ios/Runner/GoogleService-Info.plist \
             --android-package-name=$ANDROID_PACKAGE_NAME \
             --android-out=android/app/google-services.json \
+            --platforms=android,ios \
             --yes
 
       - name: Generate code with build_runner
