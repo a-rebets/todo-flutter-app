@@ -29,7 +29,9 @@ class StartApp extends ConsumerWidget {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
-    _selectedIndex = index;
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   Widget _getScreen(AppUser? user, WidgetRef ref) {

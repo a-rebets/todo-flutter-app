@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/user.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_app/providers/todo_list.dart';
 
 class ProfileScreen extends StatelessWidget {
   final AppUser user;
@@ -56,8 +58,14 @@ class ProfileScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    '0',
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final todos = ref.watch(todoListProvider);
+                      final completedCount = todos.values
+                          .expand((list) => list)
+                          .where((todo) => todo.isDone)
+                          .length;
+                      return Text(completedCount.toString(),
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ],
