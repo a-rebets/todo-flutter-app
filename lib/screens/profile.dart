@@ -61,7 +61,7 @@ class ProfileScreen extends StatelessWidget {
                   Consumer(
                     builder: (context, ref, child) {
                       final todos = ref.watch(todoListProvider);
-                      final completedCount = todos.values
+                      final completedCount = todos.asData!.value.values
                           .expand((list) => list)
                           .where((todo) => todo.isDone)
                           .length;
