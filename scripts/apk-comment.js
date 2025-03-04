@@ -1,8 +1,12 @@
 import { UTApi } from 'uploadthing/server';
 import { readFileSync } from "fs";
-import { join } from "path";
+import { join, dirname } from "path";
 import { Octokit } from '@octokit/rest';
 import { File } from 'buffer';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 const utapi = new UTApi({
