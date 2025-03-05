@@ -19,7 +19,8 @@ class LoggedUser extends _$LoggedUser {
       return AppUser(
           id: user.uid,
           name: userData.data()!['name'],
-          email: userData.data()!['email']);
+          email: userData.data()!['email'],
+          creationDate: (userData.data()!['creationDate'] as Timestamp).toDate());
     } else {
       return null;
     }
@@ -39,6 +40,7 @@ class LoggedUser extends _$LoggedUser {
           'name': name,
           'email': email,
           'membership': 'STANDARD',
+          'creationDate': FieldValue.serverTimestamp(),
         },
         SetOptions(merge: true),
       );
