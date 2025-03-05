@@ -87,11 +87,11 @@ class _MyAppState extends ConsumerState<MyApp> {
               themeMode: themeMode,
               theme: _themes[0],
               darkTheme: _themes[1],
-              home: isFirebaseReady ? const StartApp() : const SplashScreen(),
+              home: isFirebaseReady ? StartApp() : const SplashScreen(),
               routes: {
                 '/auth': (ctx) => const SignUpForm(),
                 '/splash': (ctx) => const SplashScreen(),
-                '/home': (ctx) => const StartApp(afterAppLaunch: true),
+                '/home': (ctx) => StartApp(afterAppLaunch: true),
               });
         });
   }
