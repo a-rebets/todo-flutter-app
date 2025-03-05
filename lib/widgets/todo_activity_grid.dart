@@ -6,7 +6,7 @@ class TodoActivityGrid extends StatefulWidget {
   const TodoActivityGrid({super.key});
 
   @override
-  State<TodoActivityGrid> createState() => TodoActivityGridState();
+  TodoActivityGridState createState() => TodoActivityGridState();
 }
 
 class TodoActivityGridState extends State<TodoActivityGrid> {
@@ -21,6 +21,7 @@ class TodoActivityGridState extends State<TodoActivityGrid> {
     return FractionallySizedBox(
       widthFactor: 0.8,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Header row with year and chevron buttons
           Row(
@@ -48,7 +49,7 @@ class TodoActivityGridState extends State<TodoActivityGrid> {
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
           Consumer(builder: (context, ref, child) {
             final todosAsync = ref.watch(todoListProvider);
             return todosAsync.when(
@@ -70,7 +71,7 @@ class TodoActivityGridState extends State<TodoActivityGrid> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: 12,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
+                    crossAxisCount: 4, // 4 columns gives 3 rows for 12 items
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
                     childAspectRatio: 1,
@@ -113,7 +114,7 @@ class TodoActivityGridCellState extends State<TodoActivityGridCell> {
       // Mid state: Light orange background
       return Colors.orange[200]!;
     } else {
-      // Min state: Transparent fill (cell shows border)
+      // Min state: Transparent (will use border and opacity)
       return Colors.transparent;
     }
   }
@@ -149,33 +150,62 @@ class TodoActivityGridCellState extends State<TodoActivityGridCell> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) {
-        setState(() {
-          isPressed = true;
-        });
-      },
-      onTapUp: (_) {
-        setState(() {
-          isPressed = false;
-        });
-      },
-      onTapCancel: () {
-        setState(() {
-          isPressed = false;
-        });
-      },
-      child: Container(
-        decoration: getDecoration(),
-        alignment: Alignment.center,
-        child: Text(
-          isPressed ? (widget.count == 0 ? '😢' : widget.count.toString()) : widget.month,
-          style: TextStyle(
-            color: getTextColor(),
-            fontWeight: FontWeight.bold,
-          ),
+    Widget cellContent = Container(
+      decoration: getDecoration(),
+      alignment: Alignment.center,
+      child: Text(
+        isPressed
+            ? (widget.count == 0 ? '😢' : widget.count.toString())
+            : widget.month,
+        style: TextStyle(
+          color: getTextColor(),
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
+
+    if (widget.count == 0) {
+      // For min state, apply 70% opacity
+      return Opacity(
+        opacity: 0.7,
+        child: GestureDetector(
+          onTapDown: (_) {
+            setState(() {
+              isPressed = true;
+            });
+          },
+          onTapUp: (_) {
+            setState(() {
+              isPressed = false;
+            });
+          },
+          onTapCancel: () {
+            setState(() {
+              isPressed = false;
+            });
+          },
+          child: cellContent,
+        ),
+      );
+    } else {
+      return GestureDetector(
+        onTapDown: (_) {
+          setState(() {
+            isPressed = true;
+          });
+        },
+        onTapUp: (_) {
+          setState(() {
+            isPressed = false;
+          });
+        },
+        onTapCancel: () {
+          setState(() {
+            isPressed = false;
+          });
+        },
+        child: cellContent,
+      );
+    }
   }
 }
