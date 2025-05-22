@@ -5,6 +5,11 @@
 
 ## Changelog
 
+### 2025.03:
+
+-   Added bottom navigation bar for easier app navigation.
+-   Implemented a profile screen to display user information and activity.
+
 ### 2023.12:
 
 -   now a task marks itself done once you press it, to edit you still just make a long tap
