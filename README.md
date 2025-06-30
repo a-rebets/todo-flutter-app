@@ -9,6 +9,7 @@
 
 -   Added bottom navigation bar for easier app navigation.
 -   Implemented a profile screen to display user information and activity.
+-   Moving a completed task to the next day now unchecks it
 
 ### 2023.12:
 
