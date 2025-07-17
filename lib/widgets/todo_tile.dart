@@ -92,6 +92,11 @@ class TodoTile extends ConsumerWidget {
   }
 
   Future<void> _moveToNextDay(WidgetRef ref) async {
+    // When postponing a task, reset completion status so it becomes active
+    // again on the new date.
+    if (todo.isDone) {
+      todo.isDone = false;
+    }
     todo.todoDate = todo.todoDate.add(const Duration(days: 1));
     await ref.read(todoListProvider.notifier).updateTaskItemToServer(todo);
   }
