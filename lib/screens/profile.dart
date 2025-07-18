@@ -69,13 +69,24 @@ class ProfileScreen extends StatelessWidget {
                     Consumer(
                       builder: (context, ref, child) {
                         final todos = ref.watch(todoListProvider);
-                        final completedCount = todos.asData!.value.values
-                            .expand((list) => list)
-                            .where((todo) => todo.isDone)
-                            .length;
-                        return Text(
-                          completedCount.toString(),
-                          style: Theme.of(context).textTheme.headlineMedium,
+                        return todos.when(
+                          data: (todosMap) {
+                            final completedCount = todosMap.values
+                                .expand((list) => list)
+                                .where((todo) => todo.isDone)
+                                .length;
+                            return Text(
+                              completedCount.toString(),
+                              style:
+                                  Theme.of(context).textTheme.headlineMedium,
+                            );
+                          },
+                          loading: () =>
+                              const CircularProgressIndicator.adaptive(),
+                          error: (error, _) => Text(
+                            '0',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
                         );
                       },
                     ),
