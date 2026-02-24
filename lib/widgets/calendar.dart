@@ -17,8 +17,11 @@ class CalendarWidget extends StatefulWidget {
 class _CalendarWidgetState extends State<CalendarWidget> {
   late DateTime _selectedDay;
   final _firstDate = DateTime(2023);
-  final _lastDate = DateTime(2025, 12, 31);
   late EasyInfiniteDateTimelineController? _controller;
+  DateTime get _lastDate {
+    final now = DateTime.now();
+    return DateTime(now.year + 5, 12, 31);
+  }
 
   DayStyle _getDayStyle([
     Color? modColor,
@@ -39,7 +42,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   @override
   void initState() {
     super.initState();
-    _selectedDay = widget.initialDaySelected;
+    _selectedDay = _clampToRange(widget.initialDaySelected);
     _controller = EasyInfiniteDateTimelineController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(milliseconds: 50), () {
@@ -60,7 +63,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         _selectedDay.subtract(const Duration(days: 30));
     final DateTime nextMonthDate = _selectedDay.add(const Duration(days: 30));
     final bool prevMonthAvailable = prevMonthDate.isAfter(_firstDate);
-    final bool nextMonthAvailable = nextMonthDate.isBefore(_lastDate);
+    final bool nextMonthAvailable = !nextMonthDate.isAfter(_lastDate);
     return Column(children: [
       Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -98,7 +101,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               ActionChip(
                   label: const Text('Today'),
                   onPressed: () {
-                    _changeDay(DateTime.now());
+                    final now = DateTime.now();
+                    _changeDay(DateTime(now.year, now.month, now.day));
                   }),
               const Spacer(),
               Row(
@@ -127,12 +131,19 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   }
 
   void _changeDay(DateTime day) {
-    _controller!.animateToDate(day);
-    if (!DateUtils.isSameDay(_selectedDay, day)) {
+    final clampedDay = _clampToRange(day);
+    _controller!.animateToDate(clampedDay);
+    if (!DateUtils.isSameDay(_selectedDay, clampedDay)) {
       setState(() {
-        _selectedDay = day;
+        _selectedDay = clampedDay;
       });
-      widget.changeDay(day);
+      widget.changeDay(clampedDay);
     }
+  }
+
+  DateTime _clampToRange(DateTime day) {
+    if (day.isBefore(_firstDate)) return _firstDate;
+    if (day.isAfter(_lastDate)) return _lastDate;
+    return day;
   }
 }

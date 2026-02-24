@@ -71,15 +71,15 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(390, 844));
     final brightness = ref.watch(themeSwitchProvider);
-    final themeMode = switch (brightness) {
-      Brightness.light => ThemeMode.light,
-      Brightness.dark => ThemeMode.dark,
+    final ThemeMode themeMode = switch (brightness) {
+      .light => .light,
+      .dark => .dark,
     };
     return FutureBuilder(
         future: _initialization,
         builder: (BuildContext context, AsyncSnapshot<FirebaseApp> snapshot) {
           final isFirebaseReady =
-              snapshot.connectionState == ConnectionState.done &&
+              snapshot.connectionState == .done &&
                   snapshot.hasData;
           return MaterialApp(
               title: 'Todo App',

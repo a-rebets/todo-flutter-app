@@ -1,5 +1,4 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:todo_app/models/todo.dart';
 
@@ -46,7 +45,7 @@ class NotificationService {
     }
 
     // Initialize notifications
-    await _notificationsPlugin.initialize(initializationSettings);
+    await _notificationsPlugin.initialize(settings: initializationSettings);
 
     // Create notification channel for Android
     await androidImplementation?.createNotificationChannel(channel);
@@ -95,10 +94,10 @@ class NotificationService {
     );
 
     await _notificationsPlugin.show(
-      todo.hashCode, // Use hashCode as a unique ID
-      todo.title,
-      'Your task was created',
-      platformDetails,
+      id: todo.hashCode, // Use hashCode as a unique ID
+      title: todo.title,
+      body: 'Your task was created',
+      notificationDetails: platformDetails,
       payload: '${todo.createdAt}',
     );
   }

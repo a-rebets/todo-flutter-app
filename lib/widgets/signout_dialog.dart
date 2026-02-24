@@ -31,12 +31,11 @@ class SignOutDialog extends ConsumerWidget {
     );
   }
 
-  Future<void> _signOut(Future<void> Function() signOutMethod) async {
-    Navigator.of(parentContext).pushNamed('/splash');
-
-    await Future.delayed(const Duration(milliseconds: 1000));
-    
-    await signOutMethod().then((_) => 
-      Navigator.of(parentContext).pushNamedAndRemoveUntil('/auth', (_) => false));
+  void _signOut(Future<void> Function() signOutMethod) {
+    final navigator = Navigator.of(parentContext);
+    navigator.pushNamed('/splash');
+    Future.delayed(const Duration(milliseconds: 1000))
+        .then((_) => signOutMethod())
+        .then((_) => navigator.pushNamedAndRemoveUntil('/auth', (_) => false));
   }
 }

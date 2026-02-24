@@ -9,7 +9,7 @@ import 'package:todo_app/screens/todo.dart';
 import 'package:todo_app/screens/profile.dart';
 
 class StartApp extends ConsumerStatefulWidget {
-  const StartApp({Key? key, this.afterAppLaunch = false}) : super(key: key);
+  const StartApp({super.key, this.afterAppLaunch = false});
 
   final bool afterAppLaunch;
 

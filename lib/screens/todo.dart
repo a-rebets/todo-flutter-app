@@ -46,7 +46,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isLightTheme = ref.watch(themeSwitchProvider) == Brightness.light;
+    final isLightTheme = ref.watch(themeSwitchProvider) == .light;
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 12.w,
@@ -57,7 +57,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
               tooltip: 'Dark theme',
               onPressed: () {
                 ref.read(themeSwitchProvider.notifier).update(
-                    (isLightTheme) ? Brightness.dark : Brightness.light);
+                    isLightTheme ? .dark : .light);
               }),
           IconButton(
               icon: const Icon(Icons.logout),
@@ -121,7 +121,7 @@ class _TodoScreenState extends ConsumerState<TodoScreen> {
     final todos = ref.watch(todoListProvider);
     return switch (todos) {
       AsyncValue(:final error?) => Center(child: Text(error.toString())),
-      AsyncValue(:final valueOrNull?) => _processMap(valueOrNull),
+      AsyncData(:final value) => _processMap(value),
       _ => const CircularProgressIndicator.adaptive(),
     };
   }
